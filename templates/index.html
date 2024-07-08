@@ -50,9 +50,9 @@
             <div class="row mt-3">
               <div class="col input-group-sm">
                 <label for="algorithm">Algorithm</label>
-                <select id="algorithm" class="form-control sm">
-                  <option selected>Needleman-Wunsch - (Global Alignment)</option>
-                  <option>Smith-Waterman - (Local Alignment)</option>
+                <select name="algorithm" id="algorithm" class="form-control sm">
+                  <option value="nw" selected>Needleman-Wunsch - (Global Alignment)</option>
+                  <option value="sw">Smith-Waterman - (Local Alignment)</option>
                 </select>
               </div>
               <div class="col">
@@ -97,11 +97,19 @@
               <option value={{n_alingments}}>All</option>
             </select>
             <div id="listContainer">
-              {% for linea in nw_alingments %}
+              {% if algorithm == "nw" %}
+                {% for linea in nw_alingments %}
+                    <div class="list-item">
+                        <pre>{{ linea[0] }}<br/>{{ linea[2] }}<br/>{{ linea[1] }}</pre>
+                    </div>
+                {% endfor %}
+              {% else %}
+                {% for linea in sw_alingments %}
                   <div class="list-item">
-                      <pre>{{ linea[0] }}<br/>{{ linea[2] }}<br/>{{ linea[1] }}</pre>
-                  </div>
-              {% endfor %}
+                        <pre>{{ linea }}</pre>
+                    </div>
+                {% endfor %}
+              {% endif %}
             </div>
           </div>
         {%endif%}

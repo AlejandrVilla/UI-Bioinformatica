@@ -5,3 +5,4 @@ docs
 !requirements.txt
 *.exe
 prueba.py
+/env

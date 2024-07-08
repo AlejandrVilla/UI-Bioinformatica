@@ -1,0 +1,7 @@
+Click
+Flask==3.0.3
+itsdangerous
+Jinja2
+MarkupSafe
+types-pkg-resources==0.1.3
+Werkzeug

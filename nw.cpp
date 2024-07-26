@@ -210,7 +210,26 @@ int main(int argc, char* argv[])
         reverse(pair_string.first.begin(), pair_string.first.end());
         reverse(pair_string.second.begin(), pair_string.second.end());
         str sep = separator(pair_string.first, pair_string.second);
-        file<<pair_string.first<<" "<<pair_string.second<<" "<<sep<<"\n";
+        std::string cur;
+        int start = 0;
+        if (pair_string.first[0] == pair_string.second[0]) cur = "match";
+        else if (pair_string.first[0] == '-' || pair_string.second[0]) cur = "mismatch";
+        else cur = "gap";
+        file << "#\n";
+        for (int i = 1; i < pair_string.first.length(); i++)
+        {
+            std::string type;
+            if (pair_string.first[i] == pair_string.second[i]) type = "match";
+            else if (pair_string.first[i] == '-' || pair_string.second[i]) type = "mismatch";
+            else type = "gap";
+            if (type != cur)
+            {
+                file << pair_string.first.substr(start, i - start) << ' ' << pair_string.second.substr(start, i - start) << sep.substr(start, i - start) << " " << cur <<'\n';
+                start = i;
+                cur = type;
+            }
+            if (i == pair_string.first.length() - 1) file << pair_string.first.substr(start, i - start) << ' ' << pair_string.second.substr(start, i - start) << sep.substr(start, i - start) << " " << cur <<'\n';
+        }
         // print_score(String1, String, file);
     }
     file.close();

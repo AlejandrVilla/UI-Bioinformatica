@@ -100,7 +100,37 @@
               {% if algorithm == "nw" %}
                 {% for linea in nw_alingments %}
                     <div class="list-item">
-                        <pre>{{ linea[0] }}<br/>{{ linea[2] }}<br/>{{ linea[1] }}</pre>
+                        <pre>
+                          {% for chunk in linea[0] %}
+                            {% if chunk.color == "match" %}
+                              <div style="color: green;">{{ chunk.seq }}</div>
+                            {% elif chunk.color == "mismatch" %}
+                              <div style="color: yellow;">{{ chunk.seq }}</div>
+                            {% else %}
+                              <div style="color: red;">{{ chunk.seq }}</div>
+                            {% endif%}
+                          {% endfor %}
+                          <br/>
+                          {% for chunk in linea[2] %}
+                            {% if chunk.color == "match" %}
+                              <div style="color: green;">{{ chunk.seq }}</div>
+                            {% elif chunk.color == "mismatch" %}
+                              <div style="color: yellow;">{{ chunk.seq }}</div>
+                            {% else %}
+                              <div style="color: red;">{{ chunk.seq }}</div>
+                            {% endif%}
+                          {% endfor %}
+                          <br/>
+                          {% for chunk in linea[1] %}
+                            {% if chunk.color == "match" %}
+                              <div style="color: green;">{{ chunk.seq }}</div>
+                            {% elif chunk.color == "mismatch" %}
+                              <div style="color: yellow;">{{ chunk.seq }}</div>
+                            {% else %}
+                              <div style="color: red;">{{ chunk.seq }}</div>
+                            {% endif%}
+                          {% endfor %}
+                          </pre>
                     </div>
                 {% endfor %}
               {% else %}

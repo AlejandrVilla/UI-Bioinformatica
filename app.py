@@ -16,6 +16,17 @@ nw_alingments = []
 sw_alingments = []
 
 
+
+class Chunk:
+    def __init__(self, seq, color):
+        self.seq = seq
+        self.type = color
+
+
+def read_alignemnts():
+    alignments = [] 
+
+
 @app.route('/', methods=['POST', 'GET'])
 def nw():
     ret = False
@@ -32,9 +43,17 @@ def nw():
             with open("nw.txt", "r") as nw_file:
                 score = int(nw_file.readline())
                 n_alingments = int(nw_file.readline())
+                cur = -1
                 for line in nw_file.readlines():
-                    nw_alingments.append(line.split())
-            nw_alingments = [[res[0], res[1], res[2].replace('-', ' ')] for res in nw_alingments]
+                    if line == "#":
+                        cur += 1;
+                        nw_alingments.append([0,0,0])
+                        continue
+                    thing = line.split()
+                    nw_alingments[cur][0].append(Chunk(thing[0], thing[3]))
+                    nw_alingments[cur][1].append(Chunk(thing[1], thing[3]))
+                    nw_alingments[cur][2].append(Chunk(thing[2].replace('-', ' '), thing[3]))
+
             ret = True
             print(f"score {score}")
             print(f"Alignments: {n_alingments}")

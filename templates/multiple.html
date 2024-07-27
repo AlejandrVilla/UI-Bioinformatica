@@ -21,15 +21,9 @@
           <form method="post">
             <div class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-sm"><b>Sequence</b> - <i>m</i></span>
+                <span class="input-group-text" id="inputGroup-sizing-sm"><b>Secuencias</b></span>
               </div>
-              <input type="text" class="form-control" id="m" name="m" placeholder="ATCCGATGCG">
-            </div>
-            <div class="input-group input-group-sm mb-3" >
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-sm" ><b>Sequence</b> - <i>n</i></span>
-              </div>
-              <input type="text" class="form-control" id="n" name="n" placeholder="ACGCGCTGGGATCG">
+              <textarea name="sequences" class="sequences" rows="12" cols="72" id="sequences" placeholder="ATCCGATGCG"></textarea>
             </div>
             <div class="row">
               <div class="col">
@@ -41,54 +35,49 @@
                 <input type="number" class="form-control" placeholder="Mismatch" id="mismatch" name="mismatch" value="-1">
               </div>
               <div class="col">
-                <label for="indel">Gap</label>
-                <input type="number" class="form-control" placeholder="Insertion or Deletion" id="indel" name="indel" value="-2">
+                <label for="gap">Gap</label>
+                <input type="number" class="form-control" placeholder="Insertion or Deletion" id="gap" name="gap" value="-2">
               </div>
             </div>
             <hr/>
       
             <div class="row mt-3">
               <div class="col input-group-sm">
-                <label for="algorithm">Algorithm</label>
+                <label for="algorithm">Algoritmo</label>
                 <select name="algorithm" id="algorithm" class="form-control sm">
-                  <option value="nw" selected>Needleman-Wunsch - (Alineamiento Global)</option>
-                  <option value="sw">Smith-Waterman - (Alineamiento Local)</option>
-                  <option value="dm">Visualizar Matriz de Puntos</option>
+                  <option value="sa" selected>Star Alignment</option>
+                  <option value="nj">Neighbor Joining</option>
                 </select>
               </div>
               <div class="col">
                 <label for="submit"> &ensp; </label>
-                <button type="submit" class="btn btn-dark btn-sm btn-block" id="submit">Align sequences</button>
+                <button type="submit" class="btn btn-dark btn-sm btn-block" id="submit">Alinear sequencias</button>
               </div>
             </div>
           </form>
         </div>
       </div>
       <div>
-        {% if ret%}
           <div>
             <hr/>
-              <h3>Score</h3>
+              <h3>Global Score</h3>
               <p>{{ score }}</p>
-              <h4>Total alignments</h4>
-              <p>{{ n_alingments }}</p>
+              <h4>Estrella</h4>
+              <p>{{ star }}</p>
             <hr/>
           </div>
-        {% endif %}
-        <h3>Matriz de Punto</h3>
+        <h3>Alineamiento Multiple</h3>
         <div id="listContainer">
-        {% if algorithm == "dm" %}
-          <table>
-            {% for row in dot_matrix %}
-            <tr>
-                {% for cell in row %}
-                    <td>{{ cell }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        </table>
-      </div>
-        {% else %}
+          <div>
+          <pre>
+          {% if algorithm == "sa" %}
+            {% for linea in sa_alignments %}
+              {{ linea }}
+            {% endfor %}
+          {% endif%}
+          </pre>
+          </div>
+        </div>
         {% if ret %}
           <div>
             <h3>Alignments</h3>
@@ -135,7 +124,6 @@
               {% endif %}
             </div>
           </div>
-        {%endif%}
         {% endif %}
       </div>
     </div>

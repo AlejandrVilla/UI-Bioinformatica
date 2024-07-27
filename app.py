@@ -14,10 +14,10 @@ DEBUG = True
 
 nw_path = "./nw.exe"
 sw_path = "./sw.exe"
-
+sa_path = './sa.exe'
 nw_alingments = []
 sw_alingments = []
-
+sa_alignments = []
 
 
 class Chunk:
@@ -126,12 +126,35 @@ def nw():
 
             return render_template('index.html',ret=ret, algorithm="dm", dot_matrix=dot_matrix)
 
-
-
-
     else:
         
         return render_template('index.html')
+    
+@app.route('/multiple', methods=['POST', 'GET'])
+def multiple():
+    if request.method == 'POST':
+        text = request.form['sequences']
+        sequences = text.strip().split('\n')
+        algorithm = request.form['algorithm']
+        match = request.form['match']
+        mismatch = request.form['mismatch']
+        gap = request.form['gap']
+        args = [str(len(sequences))]
+        args.extend(sequences)
+        args.extend([match, mismatch, gap])
+        print(args)
+        subprocess.run([sa_path] + args)
+        star_alignments = []    
+        with open("sa.txt", "r") as sa_file:
+            star = sa_file.readline()
+            global_score = int(sa_file.readline())
+            for line in sa_file.readlines():
+                star_alignments.append(line.strip())
+        return render_template('multiple.html', algorithm="sa", sa_alignments=star_alignments, star=star, score=global_score)
+    else:
+        return render_template('multiple.html')
+        
+
     
 @app.route('/cluster', methods=['POST', 'GET'])
 def cluster():

@@ -237,7 +237,7 @@ public:
                     {
                         max_val = this->values_matrix[i][j];
                         xs = {i};
-                        ys = {j};
+                        ys = {j - max_val};
                     }
                 }
                 else if (max_val == this->values_matrix[i][j])
@@ -257,6 +257,46 @@ public:
         }
         return alignments;
     }
+
+    std::vector<std::vector<int>> get_indices_and_length()
+    {
+        int max_val = 0;
+        
+        std::vector<int> xs;
+        std::vector<int> ys;
+
+        for (int i = 0; i < this->values_matrix.size(); i++)
+        {
+            for (int j = 0; j < this->values_matrix[i].size(); j++)
+            {
+                if (max_val < this->values_matrix[i][j]) 
+                {
+                    if (is_valid_alignment(i, j))
+                    {
+                        max_val = this->values_matrix[i][j];
+                        xs = {i - max_val};
+                        ys = {j - max_val};
+                    }
+                }
+                else if (max_val == this->values_matrix[i][j])
+                {
+                    if (is_valid_alignment(i, j))
+                    {
+                        xs.push_back(i - max_val);
+                        ys.push_back(j - max_val);
+                    }
+                }
+            }
+        }
+        std::vector<int> lengths;
+        for (int i = 0; i < xs.size(); i++)
+        {
+            lengths.push_back((xs[i] - 1) - (xs[i] - max_val) + 1);
+        }
+
+        return {xs, ys, lengths};
+    }
+
 
     int get_max_score()
     {
@@ -394,10 +434,86 @@ int main(int argc, char* argv[])
 
     auto alineamientos = alineacion.get_allignments();
 
-    for (const auto & a: alineamientos)
+    std::vector<std::vector<int>> my_vecs = alineacion.get_indices_and_length();
+
+    for (int i = 0; i < my_vecs[0].size(); i++)
     {
-        file << a << '\n';
+        int x = my_vecs[0][i];
+        int y = my_vecs[1][i];
+        int len = my_vecs[2][i];
+
+        std::string seq_s;
+        std::string seq_t;
+
+        if (y > x)
+        {
+            for (int i = 0; i < y - x; i++)
+            {
+                seq_s += "-";
+            }
+            std::string bridge1 = "";
+            for (int i = 0; i < y; i++)
+            {
+                bridge1 += "-";
+            }
+            std::string bridge2 = "";
+            for (int i = 0; i < len; i++)
+            {
+                bridge2 += "|";
+            }
+            seq_s += alineacion.s;
+            seq_t = alineacion.t;
+            file << "#\n";
+            file << seq_s.substr(0, y) << ' ' << seq_t.substr(0, y) << ' ' << bridge1 << ' ' << "mismatch" << '\n';
+            file << seq_s.substr(y, len) << ' ' << seq_t.substr(y, len) << ' ' << bridge2 << ' ' << "match" << '\n';
+            file << seq_s.substr(y + len, seq_s.length() - (y + len)) << ' ' << seq_t.substr(y + len, seq_t.length() - (y + len)) << ' ' << "-" << ' ' << "mismatch" << '\n';
+        }
+        else if (x > y)
+        {
+            for (int i = 0; i < x - y; i++)
+            {
+                seq_t += "-";
+            }
+            std::string bridge1 = "";
+            for (int i = 0; i < x; i++)
+            {
+                bridge1 += "-";
+            }
+            std::string bridge2 = "";
+            for (int i = 0; i < len; i++)
+            {
+                bridge2 += "|";
+            }
+            seq_s = alineacion.s;
+            seq_t += alineacion.t;
+            file << "#\n";
+            file << seq_s.substr(0, x) << ' ' << seq_t.substr(0, x) << ' ' << bridge1 << ' ' << "mismatch" << '\n';
+            file << seq_s.substr(x, len) << ' ' << seq_t.substr(x, len) << ' ' << bridge2 << ' ' << "match" << '\n';
+            file << seq_s.substr(x + len, seq_s.length() - (x + len)) << ' ' << seq_t.substr(x + len, seq_t.length() - (x + len)) << ' ' << "-" << ' ' << "mismatch" << '\n'; 
+        }
+        else
+        {
+            std::string bridge1 = "";
+            for (int i = 0; i < x; i++)
+            {
+                bridge1 += "-";
+            }
+            std::string bridge2 = "";
+            for (int i = 0; i < len; i++)
+            {
+                bridge2 += "|";
+            }
+            seq_s = alineacion.s;
+            seq_t = alineacion.t;
+            file << "#\n";
+            file << seq_s.substr(0, x) << ' ' << seq_t.substr(0, x) << ' ' << bridge1 << ' ' << "mismatch" << '\n';
+            file << seq_s.substr(x, len) << ' ' << seq_t.substr(x, len) << ' ' << bridge2 << ' ' <<  "match" << '\n';
+            file << seq_s.substr(x + len, seq_s.length() - (x + len)) << ' ' << seq_t.substr(x + len, seq_t.length() - (x + len)) << ' ' << "-" << ' ' << "mismatch" << '\n';
+        }
+
+
     }
+
     file.close();
 
     return 0;

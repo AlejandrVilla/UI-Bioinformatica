@@ -28,3 +28,22 @@ body{
 pre{
     color: bisque;
 }
+
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: auto; /* Set the table width to 100% to ensure uniform cell sizes */
+}
+td {
+    border: 1px solid white;
+    width: 30px; /* Set the width of each cell to a smaller value */
+    height: 30px; /* Set the height of each cell to match the width */
+    text-align: center;
+    vertical-align: middle;
+    color: bisque;
+}
+
+textarea {
+    white-space: pre;
+    font-family: monospace; /* Optional: to resemble preformatted text styling */
+}

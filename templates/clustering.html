@@ -13,7 +13,7 @@
 
 <body>
   <div class="container">
-    <h2 class="ml-4">Pairwise Sequence Alignment Tool</h2>
+    <h2 class="ml-4">Clusterizacion</h2>
     <div class="info-div">
       <div class="form-div">
         <div class="col-6">
@@ -21,44 +21,26 @@
           <form method="post">
             <div class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-sm"><b>Sequence</b> - <i>m</i></span>
+                <span class="input-group-text" id="inputGroup-sizing-sm"><b>Matriz de distancias</b> </span>
               </div>
-              <input type="text" class="form-control" id="m" name="m" placeholder="ATCCGATGCG">
+              <br>
+              <p>Colocar la matriz triangular inferior de la matriz de distancias, con las columnas separadas por espacios y las filas separadas por saltos de linea</p>
+              <textarea class="dist-matrix" rows="12" cols="72" id="m" name="m" placeholder="ATCCGATGCG"></textarea>
             </div>
-            <div class="input-group input-group-sm mb-3" >
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-sm" ><b>Sequence</b> - <i>n</i></span>
-              </div>
-              <input type="text" class="form-control" id="n" name="n" placeholder="ACGCGCTGGGATCG">
-            </div>
-            <div class="row">
-              <div class="col">
-                <label for="match">Match</label>
-                <input type="number" class="form-control" placeholder="Match" id="match" name="match" value="1">
-              </div>
-              <div class="col">
-                <label for="mismatch">Mismatch</label>
-                <input type="number" class="form-control" placeholder="Mismatch" id="mismatch" name="mismatch" value="-1">
-              </div>
-              <div class="col">
-                <label for="indel">Gap</label>
-                <input type="number" class="form-control" placeholder="Insertion or Deletion" id="indel" name="indel" value="-2">
-              </div>
-            </div>
+            
             <hr/>
       
             <div class="row mt-3">
               <div class="col input-group-sm">
-                <label for="algorithm">Algorithm</label>
-                <select name="algorithm" id="algorithm" class="form-control sm">
-                  <option value="nw" selected>Needleman-Wunsch - (Alineamiento Global)</option>
-                  <option value="sw">Smith-Waterman - (Alineamiento Local)</option>
-                  <option value="dm">Visualizar Matriz de Puntos</option>
+                <label for="mode">Modo</label>
+                <select name="mode" id="mode" class="form-control sm">
+                  <option value="single" selected>MIN</option>
+                  <option value="complete">MAX</option>
                 </select>
               </div>
               <div class="col">
                 <label for="submit"> &ensp; </label>
-                <button type="submit" class="btn btn-dark btn-sm btn-block" id="submit">Align sequences</button>
+                <button type="submit" class="btn btn-dark btn-sm btn-block" id="submit">Clusterizar</button>
               </div>
             </div>
           </form>
@@ -75,20 +57,11 @@
             <hr/>
           </div>
         {% endif %}
-        <h3>Matriz de Punto</h3>
+        <h3>Cluster</h3>
         <div id="listContainer">
-        {% if algorithm == "dm" %}
-          <table>
-            {% for row in dot_matrix %}
-            <tr>
-                {% for cell in row %}
-                    <td>{{ cell }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        </table>
+        <img src="/static/cluster.png" alt="">
+
       </div>
-        {% else %}
         {% if ret %}
           <div>
             <h3>Alignments</h3>
@@ -135,7 +108,6 @@
               {% endif %}
             </div>
           </div>
-        {%endif%}
         {% endif %}
       </div>
     </div>

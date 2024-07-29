@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="static/styles.css">
+  <title>Alignments!</title>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>Operaciones Basicas</h2>
+        <div class="row mt-4">
+            <!-- Form Column -->
+            <div class="col-md-12">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="m">Secuencia</label>
+                        <input type="text" class="form-control" id="m" name="m" placeholder="ATCCGATGCG" maxlength="30">
+                    </div>
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-dark btn-block">Analizar Secuencia</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Results Column -->
+            <div class="col-md-6">
+                <div class="result-div mt-4">
+                    <hr/>
+                    <h3>Tipo</h3>
+                    <p>{% if ret %}{{ seq_type }}{% else %}--{% endif%}</p>
+                    <h4>Cantidad de elementos</h4>
+                    <p>{% if ret %}{{ n_elements }}{% else %}--{% endif%}</p>
+                    <h4>Transcripcion</h4>
+                    {% if ret %}
+                        {% if seq_type == "ADN" %}
+                        <p>{{ transcription }}</p>
+                        {% else %}
+                        <p>Al no ser una secuencia de ADN no se puede realizar transcripcion a ARN</p>
+                        {% endif %}
+                    {% else %}
+                    <p>--</p>
+                    {% endif %}
+                    <hr/>
+                </div>
+            </div>
+        </div>
+    </div>
+      
+  <script src="static/main.js"></script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -74,62 +74,118 @@
             {% for linea in sa_alignments %}
               {{ linea }}
             {% endfor %}
-          {% endif%}
+          {% endif %}
+          {% if algorithm == "nj" %}
+            <img src="/static/neigh_join.png">
+          {% endif %}
           </pre>
           </div>
         </div>
-        {% if ret %}
-          <div>
-            <h3>Alignments</h3>
-            <label for="numElements">Select number of elements to display:</label>
-            <select id="numElements" onchange="updateDisplay()">
-              {% if n_alingments >= 1 %}
-                <option value="1">1</option>
-              {% endif %}
-              {% if n_alingments >= 2 %}
-                <option value="2">2</option>
-              {% endif %}
-              {% if n_alingments >= 3 %}
-                <option value="3">3</option>
-              {% endif %}
-              {% if n_alingments >= 5 %}
-                <option value="5">5</option>
-              {% endif %}
-              {% if n_alingments >= 10 %}
-                <option value="10">10</option>
-              {% endif %}
-              <option value={{n_alingments}}>All</option>
-            </select>
-            <div id="listContainer">
-              {% if algorithm == "nw" %}
-                {% for linea in nw_alingments %}
-                    <div class="list-item">
-                        <pre>
-                          {% for chunk in linea[0] %}{% if chunk.type == "match" %}<span style="color: green;">{{chunk.seq}}</span>{% elif chunk.type == "mismatch" %}<span style="color: yellow;">{{chunk.seq}}</span>{% else %}<span style="color: red;">{{chunk.seq}}</span>{% endif %}{% endfor %}
-                          {% for chunk in linea[2] %}{% if chunk.type == "match" %}<span style="color: green;">{{chunk.seq}}</span>{% elif chunk.type == "mismatch" %}<span style="color: yellow;">{{chunk.seq}}</span>{% else %}<span style="color: red;">{{chunk.seq}}</span>{% endif %}{% endfor %}
-                          {% for chunk in linea[1] %}{% if chunk.type == "match" %}<span style="color: green;">{{chunk.seq}}</span>{% elif chunk.type == "mismatch" %}<span style="color: yellow;">{{chunk.seq}}</span>{% else %}<span style="color: red;">{{chunk.seq}}</span>{% endif %}{% endfor %}
-                        </pre>
-                    </div>
-                {% endfor %}
-              {% else %}
-                {% for linea in sw_alingments %}
-                  <div class="list-item">
-                        <pre>
-                          {% for chunk in linea[0] %}{% if chunk.type == "match" %}<span style="color: green;">{{chunk.seq}}</span>{% else %}<span style="color: gray;">{{chunk.seq}}</span>{% endif %}{% endfor %}
-                          {% for chunk in linea[2] %}{% if chunk.type == "match" %}<span style="color: green;">{{chunk.seq}}</span>{% else %}<span style="color: gray;">{{chunk.seq}}</span>{% endif %}{% endfor %}
-                          {% for chunk in linea[1] %}{% if chunk.type == "match" %}<span style="color: green;">{{chunk.seq}}</span>{% else %}<span style="color: gray;">{{chunk.seq}}</span>{% endif %}{% endfor %}
-                        </pre>
-                    </div>
-                {% endfor %}
-              {% endif %}
-            </div>
-          </div>
-        {% endif %}
       </div>
     </div>
   </div>
       
   <script src="static/main.js"></script>
+  <script>
+    function neighborJoining(matrix, labels) {
+    let nodes = labels.map((label, i) => ({ name: label, index: i, children: [] }));
+    while (nodes.length > 2) {
+        const n = nodes.length;
+        const totalD = Array(n).fill(0);
+        const R = Array(n).fill(0);
+        let D_s = [];
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                totalD[i] += matrix[i][j];
+            }
+        }
+
+        for(let i = 0 ;  i < n; i++){
+            let row = [];
+            for(let j = 0 ; j < n; j++){
+                if(i != j)
+                    row[j] = (n - 2) * matrix[i][j] - totalD[i] - totalD[j];
+                else
+                    row[j] = 0;
+            }
+            D_s.push(row);
+        }
+
+        let minVal = Infinity;
+        let minIndices = [-1, -1];
+
+        for (let i = 0; i < D_s.length; i++) {
+            for (let j = 0; j < D_s[i].length; j++) {
+                if (D_s[i][j] < minVal) {
+                    minVal = D_s[i][j];
+                    minIndices = [i, j];
+                }
+            }
+        }
+    
+        let a = minIndices[0];
+        let b = minIndices[1];
+        let delta = (totalD[a] - totalD[b]) / (n - 2);
+
+        const distAtoB = matrix[a][b];
+        const newDistA = (distAtoB + delta) / 2;
+        const newDistB = distAtoB - newDistA;
+
+        const newNode = {
+            name: `Node_${nodes.length}`,
+            children: [
+                { ...nodes[a], distance: newDistA },
+                { ...nodes[b], distance: newDistB },
+            ],
+            index: nodes.length,
+        };
+        let newMatrix = [];
+        let newRow = [0];
+        for (let i = 0; i < n; i++) {
+            if (i !== a && i !== b) {
+                const newDist = (matrix[i][a] + matrix[i][b] - distAtoB) / 2;
+                newRow.push(newDist);
+            }
+        }
+        newMatrix.push(newRow);
+        for (let i = 0; i < n; i++) {
+            if (i !== a && i !== b) {
+                const newRow = [];
+                for (let j = i; j < n; j++) {
+                    if (j !== a && j !== b) {
+                        newRow.push(matrix[i][j]);
+                    }
+                }
+                newMatrix.push(newRow);
+            }
+        }
+        let size = newMatrix.length;
+        let completeMatrix = Array.from({ length: size }, () => Array(size).fill(0));
+        for (let i = 0; i < size; i++) {
+            let c = i;
+            for (let j = 0; j < newMatrix[i].length; j++) {
+                completeMatrix[i][c] = newMatrix[i][j];
+                c++;
+            }
+        }
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < i; j++) {
+                completeMatrix[i][j] = completeMatrix[j][i];
+            }
+        }
+        newMatrix = completeMatrix;
+
+        matrix = newMatrix;
+        nodes = nodes.filter((_, i) => i !== a && i !== b);
+        nodes.unshift(newNode);
+    }
+    const aux = nodes[1];
+    nodes = nodes[0];
+    nodes.children.push({...aux, distance: matrix[0][1]})
+    console.log(nodes)
+    return nodes;
+  }
+  </script>
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

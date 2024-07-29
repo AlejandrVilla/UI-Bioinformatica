@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="static/styles.css">
+  <title>Alignments!</title>
+</head>
+
+<body>
+  <div class="container">
+    <h2 class="ml-4">Creacion de arbol enraizado filogenetico</h2>
+    <div class="info-div">
+      <div class="form-div">
+        <div class="col-6">
+          <hr/>
+          <form method="post">
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><b>Matriz de distancias</b></span>
+              </div>
+              <textarea name="dm" class="dm" rows="12" cols="72" id="dm" placeholder="ATCCGATGCG"></textarea>
+            </div>
+            
+            <hr/>
+      
+            <div class="row mt-3">
+              <div class="col input-group-sm">
+                <label for="algorithm">Algoritmo</label>
+                <select name="algorithm" id="algorithm" class="form-control sm">
+                  <option value="upgma" selected>UPGMA</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="submit"> &ensp; </label>
+                <button type="submit" class="btn btn-dark btn-sm btn-block" id="submit">Crear arbol enraizado</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div>
+          <div>
+            <hr/>
+              <h3>Global Score</h3>
+              <p>{{ score }}</p>
+              <h4>Estrella</h4>
+              <p>{{ star }}</p>
+            <hr/>
+          </div>
+        <h3>Arbol Enraizado</h3>
+        <div id="listContainer">
+          <div>
+            <img src="/static/arbol.png">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      
+  <script src="static/main.js"></script>
+ 
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

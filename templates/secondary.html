@@ -12,22 +12,31 @@
 </head>
 
 <body>
-  <div class="container">
-    <br>
-    <h2 class="ml-4">Visualizador para Bioinformatica</h2>
-    <br>
-    <a href="{{ url_for('basics') }}"  class="btn btn-dark btn-sm btn-block" style="width: 50%;">Operaciones Basicas</a><br>
-    <a href="{{ url_for('pairwise') }}"  class="btn btn-dark btn-sm btn-block" style="width: 50%;">Alineamiento de Pares</a> <br>
-    <a href="{{ url_for('multiple') }}"  class="btn btn-dark btn-sm btn-block" style="width: 50%;">Alineamiento Multiple</a> <br>
-    <a href="{{ url_for('cluster') }}"  class="btn btn-dark btn-sm btn-block" style="width: 50%;">Clusterizacion</a> <br>
-    <a href="{{ url_for('phylogeny') }}"  class="btn btn-dark btn-sm btn-block" style="width: 50%;">Filogenia</a> <br>
-    <a href="{{ url_for('secondary') }}"  class="btn btn-dark btn-sm btn-block" style="width: 50%;">Estructura Secundaria</a> <br> <br>
-
-    <img style="width: 50%;" src="/static/home_img.jpg">
-
-        
-        
-  </div>
+    <div class="container mt-5">
+        <h2>Estructura Secundaria</h2>
+        <div class="row mt-4">
+            <!-- Form Column -->
+            <div class="col-md-12">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="sequence">Secuencia</label>
+                        <input type="text" class="form-control" id="sequence" name="sequence" placeholder="ATCCGATGCG" maxlength="30">
+                    </div>
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-dark btn-block">Analizar Secuencia</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Results Column -->
+            <div class="col-md-6">
+                <div class="result-div mt-4">
+                    <hr/>
+                    <img src="/static/second_struct.png" style="width: 180%;">
+                    <hr/>
+                </div>
+            </div>
+        </div>
+    </div>
       
   <script src="static/main.js"></script>
   <!-- Optional JavaScript -->

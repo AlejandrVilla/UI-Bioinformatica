@@ -12,8 +12,8 @@
 </head>
 
 <body>
-  <div class="container">
-    <h2 class="ml-4">Pairwise Sequence Alignment Tool</h2>
+  <div class="container mt-5">
+    <h2 class="ml-4">Alineamiento de Pares</h2>
     <div class="info-div">
       <div class="form-div">
         <div class="col-6">
@@ -54,6 +54,7 @@
                   <option value="nw" selected>Needleman-Wunsch - (Alineamiento Global)</option>
                   <option value="sw">Smith-Waterman - (Alineamiento Local)</option>
                   <option value="dm">Visualizar Matriz de Puntos</option>
+                  <option value="fasta">Alineamiento de proteinas (FASTA) </option>
                 </select>
               </div>
               <div class="col">
@@ -75,9 +76,9 @@
             <hr/>
           </div>
         {% endif %}
-        <h3>Matriz de Punto</h3>
         <div id="listContainer">
         {% if algorithm == "dm" %}
+          <h3>Matriz de Punto</h3>
           <table>
             {% for row in dot_matrix %}
             <tr>
@@ -122,7 +123,7 @@
                         </pre>
                     </div>
                 {% endfor %}
-              {% else %}
+              {% elif algorithm == "sw" %}
                 {% for linea in sw_alingments %}
                   <div class="list-item">
                         <pre>
@@ -132,6 +133,15 @@
                         </pre>
                     </div>
                 {% endfor %}
+              {% elif algorithm == "fasta" %}
+                {% for linea in fasta_alignments %}
+                <div class="list-item">
+                      <pre>
+                        {{ linea[0] }}
+                        {{ linea[1] }}
+                      </pre>
+                  </div>
+                {% endfor %}  
               {% endif %}
             </div>
           </div>

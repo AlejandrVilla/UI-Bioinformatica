@@ -1,3 +1,19 @@
 graph {
 A;
+B;
+C;
+D;
+E;
+AB;
+AB -- A [label="0.5"];
+AB -- B [label="0.5"];
+CE;
+CE -- C [label="0.5"];
+CE -- E [label="0.5"];
+CED;
+CED -- CE [label="1.5"];
+CED -- D [label="2.0"];
+ABCED;
+ABCED -- AB [label="1.875"];
+ABCED -- CED [label="0.375"];
 }

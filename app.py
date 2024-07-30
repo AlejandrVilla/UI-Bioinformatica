@@ -124,11 +124,11 @@ def basics():
         if seq_type == "ADN":
             transcription = adn_to_arn_transcription(seq)
         ret = True
-        return render_template('basics.html', ret=ret, seq_type=seq_type, n_elements=seq_len, transcription=transcription)
+        return render_template('basics.html', seq=seq, ret=ret, seq_type=seq_type, n_elements=seq_len, transcription=transcription)
     
 
     else:
-        return render_template('basics.html')
+        return render_template('basics.html', seq="")
 
 
 @app.route('/pairwise', methods=['POST', 'GET'])
@@ -170,7 +170,7 @@ def pairwise():
             print(f"score {score}")
             print(f"Alignments: {n_alingments}")
 
-            return render_template('index.html',ret=ret, algorithm="nw", nw_alingments=nw_alingments, score=score, n_alingments=n_alingments)
+            return render_template('index.html', seq1=m, seq2=n, match=match, mismatch=mismatch, gap=indel, ret=ret, algorithm="nw", nw_alingments=nw_alingments, score=score, n_alingments=n_alingments)
         elif request.form['algorithm'] == "sw":
             m = request.form['m']
             n = request.form['n']
@@ -201,7 +201,7 @@ def pairwise():
             print(f"score {score}")
             print(f"Alignments: {n_alingments}")
 
-            return render_template('index.html',ret=ret, algorithm="sw", sw_alingments=sw_alingments, score=score, n_alingments=n_alingments)
+            return render_template('index.html', seq1=m, seq2=n, match=match, mismatch=mismatch, gap=indel, ret=ret, algorithm="sw", sw_alingments=sw_alingments, score=score, n_alingments=n_alingments)
         elif request.form['algorithm'] == "dm":
             m = request.form['m']
             n = request.form['n']
@@ -217,7 +217,7 @@ def pairwise():
                 else:
                     dot_matrix[i].insert(0, m[i - 1])
 
-            return render_template('index.html',ret=ret, algorithm="dm", dot_matrix=dot_matrix)
+            return render_template('index.html', seq1=m, seq2=n, match="1", mismatch="-1", gap="-2", ret=ret, algorithm="dm", dot_matrix=dot_matrix)
         else:
             m = request.form['m']
             n = request.form['n']
@@ -233,10 +233,10 @@ def pairwise():
                 seq1_aligned, seq2_aligned, score, begin, end = alignment
                 fasta_alignments.append([f"\n>secuencia1_alineada\n{seq1_aligned}", f"\n>secuencia2_alineada\n{seq2_aligned}"])
 
-            return render_template('index.html', ret=True, algorithm="fasta", fasta_alignments=fasta_alignments, score=score, n_alingments=len(fasta_alignments))
+            return render_template('index.html', seq1=m, seq2=n, match=match, mismatch=mismatch, gap=indel, ret=True, algorithm="fasta", fasta_alignments=fasta_alignments, score=score, n_alingments=len(fasta_alignments))
     else:
         
-        return render_template('index.html')
+        return render_template('index.html', seq1="", seq2="", algorithm="nw", match="1", mismatch="-1", gap="-2")
     
 @app.route('/multiple', methods=['POST', 'GET'])
 def multiple():
@@ -259,7 +259,7 @@ def multiple():
                 global_score = int(sa_file.readline())
                 for line in sa_file.readlines():
                     star_alignments.append(line.strip())
-            return render_template('multiple.html', algorithm="sa", sa_alignments=star_alignments, star=star, score=global_score)
+            return render_template('multiple.html', sequences=text, algorithm="sa", sa_alignments=star_alignments, star=star, score=global_score)
         else:
             match = int(request.form['match'])
             mismatch = int(request.form['mismatch'])
@@ -277,10 +277,10 @@ def multiple():
             labels = labels[:len(dist_matrix)]
 
             neighbor_joining(dist_matrix, labels)
-            return render_template('multiple.html', algorithm="nj")
+            return render_template('multiple.html', sequences=text, algorithm="nj")
 
     else:
-        return render_template('multiple.html')
+        return render_template('multiple.html', sequences="")
     
         
 
@@ -320,11 +320,11 @@ def cluster():
         plt.xlabel('Indice del cluster')
         plt.ylabel('Distancias')
         plt.savefig("static/cluster.png")
-        return render_template('clustering.html')
+        return render_template('clustering.html', mode=mode, matrix=dist_matrix)
 
     else:
         
-        return render_template('clustering.html')
+        return render_template('clustering.html', mode="single", matrix="")
     
 
 
@@ -359,6 +359,7 @@ def phylogeny():
             labels_dict[label] = label
 
         all_labels = labels[:]
+        node_heights = [0 for _ in range(len(labels))]
 
         distance_matrix = matrix.copy()
         original_matrix = matrix.copy()
@@ -377,11 +378,13 @@ def phylogeny():
             node = new_labels[min_col] + labels[min_row]
 
             all_labels.append(node)
+            node_heights.append(min_edge / 2)
 
             f.write(node + ';\n')
 
-            f.write(new_labels[min_col] + " -- " + node + ';\n')
-            f.write(labels[min_row] + " -- " + node + ';\n')
+
+            f.write(node + " -- " + new_labels[min_col] + ' [label="' + str(min_edge / 2 - node_heights[all_labels.index(new_labels[min_col])]) + '"];\n')
+            f.write(node + " -- " + labels[min_row] + ' [label="' + str(min_edge / 2 - node_heights[all_labels.index(labels[min_row])]) + '"];\n')
 
             new_labels[min_col] = new_labels[min_col] + labels[min_row]
 
@@ -409,16 +412,20 @@ def phylogeny():
                     new_distance_matrix[j, i] = new_distance_matrix[i, j]
 
             labels = new_labels[:]
-            distance_matrix = np.copy(new_distance_matrix)
-
+            distance_matrix = np.copy(new_distance_matrix) 
 
         f.write('}')
+        f.close()
 
+        
+        args = ["Graphviz/bin/dot", "-Tpng", "graph.dot","-o","static/arbol.png"]
 
-        return render_template('filogenia.html')
+        subprocess.run(args)
+
+        return render_template('filogenia.html', matrix=dist_matrix)
 
     else:
-        return render_template('filogenia.html')
+        return render_template('filogenia.html', matrix="")
 
 
 @app.route('/secondary', methods=['POST', 'GET'])
@@ -439,7 +446,7 @@ def secondary():
 
         return render_template('secondary.html', sequence=sequence)
     else:
-        return render_template('secondary.html')
+        return render_template('secondary.html', sequence="")
 
 
 class Node:

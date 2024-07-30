@@ -8,7 +8,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="static/styles.css">
-  <title>Alignments!</title>
+  <title>Visualizador de Bioinformatica</title>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
                 <form method="post">
                     <div class="form-group">
                         <label for="m">Secuencia</label>
-                        <input type="text" class="form-control" id="m" name="m" placeholder="ATCCGATGCG" maxlength="30">
+                        <input type="text" class="form-control" id="m" name="m" placeholder="ATCCGATGCG" maxlength="30" value="{{seq}}">
                     </div>
                     <div class="form-group mt-4">
                         <button type="submit" class="btn btn-dark btn-block">Analizar Secuencia</button>

@@ -8,7 +8,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="static/styles.css">
-  <title>Alignments!</title>
+  <title>Visualizador de Bioinformatica</title>
 </head>
 
 <body>
@@ -23,26 +23,26 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm"><b>Sequence</b> - <i>m</i></span>
               </div>
-              <input type="text" class="form-control" id="m" name="m" placeholder="ATCCGATGCG">
+              <input type="text" class="form-control" id="m" name="m" placeholder="ATCCGATGCG" value="{{ seq1 }}">
             </div>
             <div class="input-group input-group-sm mb-3" >
               <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm" ><b>Sequence</b> - <i>n</i></span>
               </div>
-              <input type="text" class="form-control" id="n" name="n" placeholder="ACGCGCTGGGATCG">
+              <input type="text" class="form-control" id="n" name="n" placeholder="ACGCGCTGGGATCG" value="{{ seq2 }}">
             </div>
             <div class="row">
               <div class="col">
                 <label for="match">Match</label>
-                <input type="number" class="form-control" placeholder="Match" id="match" name="match" value="1">
+                <input type="number" class="form-control" placeholder="Match" id="match" name="match" value="{{ match }}">
               </div>
               <div class="col">
                 <label for="mismatch">Mismatch</label>
-                <input type="number" class="form-control" placeholder="Mismatch" id="mismatch" name="mismatch" value="-1">
+                <input type="number" class="form-control" placeholder="Mismatch" id="mismatch" name="mismatch" value="{{ mismatch }}">
               </div>
               <div class="col">
                 <label for="indel">Gap</label>
-                <input type="number" class="form-control" placeholder="Insertion or Deletion" id="indel" name="indel" value="-2">
+                <input type="number" class="form-control" placeholder="Insertion or Deletion" id="indel" name="indel" value="{{ gap }}">
               </div>
             </div>
             <hr/>
@@ -51,10 +51,10 @@
               <div class="col input-group-sm">
                 <label for="algorithm">Algorithm</label>
                 <select name="algorithm" id="algorithm" class="form-control sm">
-                  <option value="nw" selected>Needleman-Wunsch - (Alineamiento Global)</option>
-                  <option value="sw">Smith-Waterman - (Alineamiento Local)</option>
-                  <option value="dm">Visualizar Matriz de Puntos</option>
-                  <option value="fasta">Alineamiento de proteinas (FASTA) </option>
+                  <option value="nw" {% if algorithm == "nw" %}selected{% endif %}>Needleman-Wunsch - (Alineamiento Global)</option>
+                  <option value="sw" {% if algorithm == "sw" %}selected{% endif %}>Smith-Waterman - (Alineamiento Local)</option>
+                  <option value="dm" {% if algorithm == "dm" %}selected{% endif %}>Visualizar Matriz de Puntos</option>
+                  <option value="fasta" {% if algorithm == "fasta" %}selected{% endif %}>Alineamiento de proteinas (FASTA) </option>
                 </select>
               </div>
               <div class="col">
@@ -71,7 +71,7 @@
             <hr/>
               <h3>Score</h3>
               <p>{{ score }}</p>
-              <h4>Total alignments</h4>
+              <h4>Nro de Alineamientos</h4>
               <p>{{ n_alingments }}</p>
             <hr/>
           </div>
@@ -92,8 +92,8 @@
         {% else %}
         {% if ret %}
           <div>
-            <h3>Alignments</h3>
-            <label for="numElements">Select number of elements to display:</label>
+            <h3>Alineamientos</h3>
+            <label for="numElements">Seleccione un numero de elementos a mostrar:</label>
             <select id="numElements" onchange="updateDisplay()">
               {% if n_alingments >= 1 %}
                 <option value="1">1</option>
@@ -110,7 +110,7 @@
               {% if n_alingments >= 10 %}
                 <option value="10">10</option>
               {% endif %}
-              <option value={{n_alingments}}>All</option>
+              <option value={{n_alingments}}>Todos</option>
             </select>
             <div id="listContainer">
               {% if algorithm == "nw" %}

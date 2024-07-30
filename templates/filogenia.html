@@ -8,11 +8,11 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="static/styles.css">
-  <title>Alignments!</title>
+  <title>Visualizador de Bioinformatica</title>
 </head>
 
 <body>
-  <div class="container">
+  <div class="container mt-5">
     <h2 class="ml-4">Creacion de arbol enraizado filogenetico</h2>
     <div class="info-div">
       <div class="form-div">
@@ -23,7 +23,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm"><b>Matriz de distancias</b></span>
               </div>
-              <textarea name="dm" class="dm" rows="12" cols="72" id="dm" placeholder="ATCCGATGCG"></textarea>
+              <textarea name="dm" class="dm" rows="12" cols="72" id="dm" placeholder="ATCCGATGCG">{{ matrix }}</textarea>
             </div>
             
             <hr/>
@@ -44,14 +44,6 @@
         </div>
       </div>
       <div>
-          <div>
-            <hr/>
-              <h3>Global Score</h3>
-              <p>{{ score }}</p>
-              <h4>Estrella</h4>
-              <p>{{ star }}</p>
-            <hr/>
-          </div>
         <h3>Arbol Enraizado</h3>
         <div id="listContainer">
           <div>

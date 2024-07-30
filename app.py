@@ -227,7 +227,9 @@ def pairwise():
 
             fasta_alignments = []
 
-            global_alignments = pairwise2.align.globalms(m, n, match, mismatch, indel, indel)
+            matrix = substitution_matrices.load('blosum62')
+
+            global_alignments = pairwise2.align.globalds(m, n, matrix, indel, indel)
             
             for alignment in global_alignments:
                 seq1_aligned, seq2_aligned, score, begin, end = alignment
